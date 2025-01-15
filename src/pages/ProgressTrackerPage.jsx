@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
     import { useDispatch, useSelector } from 'react-redux';
-    import { Typography, Container, Box } from '@mui/material';
+    import { Typography, Container, Box, Paper } from '@mui/material';
     import { Line } from 'react-chartjs-2';
     import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+    import styled from '@emotion/styled';
 
     ChartJS.register(
       CategoryScale,
@@ -13,6 +14,13 @@ import React, { useEffect } from 'react';
       Tooltip,
       Legend
     );
+
+    const StyledPaper = styled(Paper)(({ theme }) => ({
+      padding: theme.spacing(3),
+      borderRadius: theme.spacing(1),
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: theme.shadows[5],
+    }));
 
     const ProgressTrackerPage = () => {
       const dispatch = useDispatch();
@@ -29,7 +37,7 @@ import React, { useEffect } from 'react';
             label: 'BMI',
             data: bmiHistory.map((item) => item.bmi),
             fill: false,
-            borderColor: 'rgb(75, 192, 192)',
+            borderColor: '#03DAC5',
             tension: 0.1,
           },
         ],
@@ -41,21 +49,41 @@ import React, { useEffect } from 'react';
           title: {
             display: true,
             text: 'BMI History',
+            color: '#fff',
+          },
+          legend: {
+            labels: {
+              color: '#fff',
+            },
+          },
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: '#fff',
+            },
+          },
+          y: {
+            ticks: {
+              color: '#fff',
+            },
           },
         },
       };
 
       return (
         <Container>
-          <Box mt={4}>
-            <Typography variant="h4" component="h1" gutterBottom>
-              Progress Tracker
-            </Typography>
-            {bmiHistory.length > 0 ? (
-              <Line data={chartData} options={chartOptions} />
-            ) : (
-              <Typography variant="body1">Loading BMI history...</Typography>
-            )}
+          <Box mt={4} display="flex" flexDirection="column" alignItems="center">
+            <StyledPaper sx={{ width: '100%', maxWidth: '800px' }}>
+              <Typography variant="h4" component="h1" gutterBottom sx={{ color: 'text.primary' }}>
+                Progress Tracker
+              </Typography>
+              {bmiHistory.length > 0 ? (
+                <Line data={chartData} options={chartOptions} />
+              ) : (
+                <Typography variant="body1" sx={{ color: 'text.secondary' }}>Loading BMI history...</Typography>
+              )}
+            </StyledPaper>
           </Box>
         </Container>
       );

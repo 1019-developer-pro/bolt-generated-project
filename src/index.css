@@ -1,6 +1,14 @@
 body {
       margin: 0;
-      font-family: sans-serif;
+      font-family: 'Roboto', sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      background-color: #121212;
+      color: #fff;
+    }
+
+    #root {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
