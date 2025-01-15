@@ -1,30 +1,33 @@
-import { takeLatest, call, put } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
     import axios from 'axios';
-    import { authStart, authSuccess, authFailure } from './authSlice';
 
-    const API_URL = 'http://localhost:3001/api/auth';
+    const API_URL = '/api/auth';
 
-    function* handleLogin({ payload }) {
+    function* handleLogin(action) {
       try {
-        yield put(authStart());
-        const response = yield call(axios.post, `${API_URL}/login`, payload);
-        yield put(authSuccess(response.data));
+        const response = yield call(axios.post, `${API_URL}/login`, action.payload);
+        yield put({ type: 'LOGIN_SUCCESS', payload: response.data });
       } catch (error) {
-        yield put(authFailure(error.response?.data?.message || error.message));
+        yield put({
+          type: 'LOGIN_FAILURE',
+          payload: error.response?.data?.message || error.message,
+        });
       }
     }
 
-    function* handleSignup({ payload }) {
+    function* handleSignup(action) {
       try {
-        yield put(authStart());
-        const response = yield call(axios.post, `${API_URL}/signup`, payload);
-        yield put(authSuccess(response.data));
+        const response = yield call(axios.post, `${API_URL}/signup`, action.payload);
+        yield put({ type: 'SIGNUP_SUCCESS', payload: response.data });
       } catch (error) {
-        yield put(authFailure(error.response?.data?.message || error.message));
+        yield put({
+          type: 'SIGNUP_FAILURE',
+          payload: error.response?.data?.message || error.message,
+        });
       }
     }
 
-    export function* watchAuth() {
-      yield takeLatest('auth/login', handleLogin);
-      yield takeLatest('auth/signup', handleSignup);
+    export default function* authSaga() {
+      yield takeLatest('LOGIN_REQUEST', handleLogin);
+      yield takeLatest('SIGNUP_REQUEST', handleSignup);
     }

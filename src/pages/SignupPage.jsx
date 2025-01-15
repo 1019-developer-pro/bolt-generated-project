@@ -11,10 +11,11 @@ import React, { useState } from 'react';
       CircularProgress,
     } from '@mui/material';
     import { useDispatch, useSelector } from 'react-redux';
-    import { login } from '../store/auth/authActions';
+    import { signup } from '../store/auth/authActions';
     import { useNavigate } from 'react-router-dom';
 
-    function LoginPage() {
+    function SignupPage() {
+      const [name, setName] = useState('');
       const [email, setEmail] = useState('');
       const [password, setPassword] = useState('');
       const dispatch = useDispatch();
@@ -25,10 +26,10 @@ import React, { useState } from 'react';
       const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-          await dispatch(login({ email, password }));
+          await dispatch(signup({ name, email, password }));
           navigate('/dashboard');
         } catch (err) {
-          console.error('Login failed:', err);
+          console.error('Signup failed:', err);
         }
       };
 
@@ -46,10 +47,20 @@ import React, { useState } from 'react';
             <Card sx={{ width: '100%' }}>
               <CardContent>
                 <Typography variant="h5" align="center" gutterBottom>
-                  Login
+                  Sign Up
                 </Typography>
                 <form onSubmit={handleSubmit}>
                   <Grid container spacing={2} direction="column">
+                    <Grid item>
+                      <TextField
+                        label="Name"
+                        type="text"
+                        fullWidth
+                        required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                    </Grid>
                     <Grid item>
                       <TextField
                         label="Email"
@@ -78,7 +89,7 @@ import React, { useState } from 'react';
                         fullWidth
                         disabled={loading}
                       >
-                        {loading ? <CircularProgress size={24} /> : 'Login'}
+                        {loading ? <CircularProgress size={24} /> : 'Sign Up'}
                       </Button>
                     </Grid>
                     {error && (
@@ -91,9 +102,9 @@ import React, { useState } from 'react';
                         variant="text"
                         color="secondary"
                         fullWidth
-                        onClick={() => navigate('/signup')}
+                        onClick={() => navigate('/login')}
                       >
-                        Don't have an account? Sign up
+                        Already have an account? Login
                       </Button>
                     </Grid>
                   </Grid>
@@ -105,4 +116,4 @@ import React, { useState } from 'react';
       );
     }
 
-    export default LoginPage;
+    export default SignupPage;
